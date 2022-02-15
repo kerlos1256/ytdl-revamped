@@ -3,19 +3,13 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
   Query,
   Req,
   Res,
 } from '@nestjs/common';
 import { VideoService } from './video.service';
-import { CreateVideoDto } from './dto/create-video.dto';
-import { UpdateVideoDto } from './dto/update-video.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { Request, Response } from 'express';
+
+import { Response } from 'express';
 import { ReqWithUser } from 'src/types/RequestWithUser';
 
 @Controller('video')
