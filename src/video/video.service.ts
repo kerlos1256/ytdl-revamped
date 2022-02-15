@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { User } from 'src/user/entities/user.entity';
 import { DeepPartial } from 'typeorm';
 import * as ytdl from 'ytdl-core';
-
+import * as  contentDisposition from 'content-disposition'
 @Injectable()
 export class VideoService {
   async newVideo(url: string,type: 'video' | 'audio',res: Response) {
@@ -13,8 +13,11 @@ export class VideoService {
       case 'video':
         const videoFormat = info.formats.filter(frm => frm.hasAudio && frm.hasVideo)
         res.setHeader(
-          'Content-Disposition', `attachment; filename="${info.videoDetails.title}.${videoFormat[0].container}"`,
+          'Content-Disposition', contentDisposition(`${info.videoDetails.title}.${videoFormat[0].container}`)
         );
+        res.setHeader(
+          "Content-length", videoFormat[0].contentLength
+        )
         ytdl(url,{format:videoFormat[0]}).pipe(res);
         return true
       case 'audio':
@@ -27,8 +30,11 @@ export class VideoService {
           }
         },audioFormats[0])
         res.setHeader(
-          'Content-Disposition', `attachment; filename="${info.videoDetails.title}.${highestAudio.container}"`,
+          'Content-Disposition', contentDisposition(`${info.videoDetails.title}.${highestAudio.container}`)
         );
+        res.setHeader(
+          "Content-length", highestAudio.contentLength
+        )
         const file = ytdl(url,{format:highestAudio});
         file.pipe(res)
         return true
