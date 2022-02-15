@@ -12,10 +12,9 @@ export class VideoService {
     switch(type){
       case 'video':
         const videoFormat = info.formats.filter(frm => frm.hasAudio && frm.hasVideo)
-        res.set({
-          'Content-Type': 'application/json',
-          'Content-Disposition': `attachment; filename=${info.videoDetails.title}.${videoFormat[0].container}`,
-        });
+        res.setHeader(
+          'Content-Disposition', `attachment; filename="${info.videoDetails.title}.${videoFormat[0].container}"`,
+        );
         ytdl(url,{format:videoFormat[0]}).pipe(res);
         return true
       case 'audio':
@@ -27,10 +26,9 @@ export class VideoService {
             return acc
           }
         },audioFormats[0])
-        res.set({
-          'Content-Type': 'application/json',
-          'Content-Disposition': `attachment; filename=${info.videoDetails.title}.${highestAudio.container}`,
-        });
+        res.setHeader(
+          'Content-Disposition', `attachment; filename="${info.videoDetails.title}.${highestAudio.container}"`,
+        );
         const file = ytdl(url,{format:highestAudio});
         file.pipe(res)
         return true

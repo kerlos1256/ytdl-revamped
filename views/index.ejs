@@ -28,12 +28,12 @@
             <li choice type="audio" style="cursor: pointer;" class="dropdown-item">Audio</li>
           </ul>
         </div>
-        <form id="urlForm" action="/video/download" method="post" class="w-100">
+        <form id="urlForm" action="/video/download" method="post" class="w-100 d-flex">
           <input name="url" id="url" type="url" placeholder="Video url" style="border: none;" class="form-control w-100">
           <input type="hidden" value="video" name="type" id="typeInput">
         </form>
-        <button id="paste" class="btn btn-sm btn-outline-info">Paste</butt>
-        <button id="download" class="btn btn-sm btn-success ms-1" disabled>Download</button>
+        <button id="paste" class="btn btn-sm btn-outline-info">Paste</button>
+        <button id="download" type="submit" class="btn btn-sm btn-success ms-1" disabled>Download</button>
       </div>
     </div>
 
@@ -46,10 +46,10 @@
       const typeInput = document.getElementById('typeInput')
       const form = document.getElementById('urlForm')
 
-      form.addEventListener('submit',e =>{
-        form.reset()
+      function handleSubmit(e){
+        console.log('submited')
         e.preventDefault()
-      })
+      }
 
       choices.forEach((choice,index)=>{
         choice.addEventListener('click',(e)=>{
@@ -76,7 +76,8 @@
         }
       })
 
-      btn.addEventListener('click',()=>{
+      btn.addEventListener("click",e=>{
+        console.log('clicked')
         form.submit()
       })
 
