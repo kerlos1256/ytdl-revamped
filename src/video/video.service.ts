@@ -19,7 +19,7 @@ export class VideoService {
           "Content-length", videoFormat[0].contentLength
         )
         ytdl(url,{format:videoFormat[0]}).pipe(res);
-        return res.redirect('/')
+        return res.status(200)
       case 'audio':
         const audioFormats = info.formats.filter(frm => frm.hasAudio && !frm.hasVideo)
         const highestAudio = audioFormats.reduce((acc,item,index,og)=>{
@@ -37,7 +37,7 @@ export class VideoService {
         )
         const file = ytdl(url,{format:highestAudio});
         file.pipe(res)
-        return res.redirect('/')
+        return res.status(200)
     }
   }
   // async getInfo(url: string) {

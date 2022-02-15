@@ -28,7 +28,7 @@
             <li choice type="audio" style="cursor: pointer;" class="dropdown-item">Audio</li>
           </ul>
         </div>
-        <form id="urlForm" action="/video/download" method="post" class="w-100 d-flex">
+        <form id="urlForm" action="/video/download" method="get" class="w-100 d-flex">
           <input name="url" id="url" type="url" placeholder="Video url" style="border: none;" class="form-control w-100">
           <input type="hidden" value="video" name="type" id="typeInput">
         </form>
@@ -46,10 +46,10 @@
       const typeInput = document.getElementById('typeInput')
       const form = document.getElementById('urlForm')
 
-      function handleSubmit(e){
-        console.log('submited')
+      form.addEventListener("submit",(e)=>{
         e.preventDefault()
-      }
+        console.log('submited')
+      })
 
       choices.forEach((choice,index)=>{
         choice.addEventListener('click',(e)=>{

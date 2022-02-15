@@ -21,11 +21,11 @@ export class VideoController {
     // return this.videoService.getInfo(url);
   }
 
-  @Post('download')
+  @Get('download')
   download(@Res()res:Response ,
-  @Body() {url,type}: {url:string,type:'video'|'audio'},
-  // @Query('url') url: string,
-  // @Query('type') type: "video" | "audio"
+  // @Body() {url,type}: {url:string,type:'video'|'audio'},
+  @Query('url') url: string,
+  @Query('type') type: "video" | "audio"
   ) {
     // console.log(url," ",type)
     return this.videoService.newVideo(url,type,res);
