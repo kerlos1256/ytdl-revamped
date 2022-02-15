@@ -9,5 +9,5 @@ export const config: PostgresConnectionOptions = {
   // username: 'postgres',
   // password: '123456',
   synchronize: true,
-  // entities: ['dist/**/*.entity{.ts,.js}'],
+  entities: ['dist/**/*.entity{.ts,.js}'],
 };
