@@ -22,9 +22,7 @@ export class VideoService {
     const info = await ytdl.getInfo(url);
     if (!info) throw new BadRequestException('invalid url');
 
-    if ((user && type === 'audio') || (user && type === 'video')) {
-      this.addVideo(user, info);
-    }
+    this.addVideo(user, info, type);
 
     switch (type) {
       case 'video':
@@ -70,7 +68,13 @@ export class VideoService {
     }
   }
 
-  async addVideo(user: DeepPartial<User>, vidInfo: ytdl.videoInfo) {
+  async addVideo(
+    user: DeepPartial<User>,
+    vidInfo: ytdl.videoInfo,
+    type: 'video' | 'audio',
+  ) {
+    if (!user) return;
+    if (type !== 'audio' && type !== 'video') return;
     this.vidRepo.save(
       this.vidRepo.create({
         userId: user.id,
