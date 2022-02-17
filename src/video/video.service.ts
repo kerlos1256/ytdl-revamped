@@ -19,9 +19,11 @@ export class VideoService {
     res: Response,
     user: DeepPartial<User> | null,
   ) {
+    console.log('service 1');
     const info = await ytdl.getInfo(url);
     if (!info) throw new BadRequestException('invalid url');
 
+    console.log('service 2');
     switch (type) {
       case 'video':
         const videoFormat = info.formats.filter(
@@ -36,7 +38,9 @@ export class VideoService {
         );
         res.setHeader('Content-length', videoFormat[0].contentLength);
 
+        console.log('service 3');
         ytdl(url, { format: videoFormat[0] }).pipe(res);
+        console.log('service 4');
         return res.status(200);
       case 'audio':
         const audioFormats = info.formats.filter(
@@ -59,9 +63,11 @@ export class VideoService {
         );
         res.setHeader('Content-length', highestAudio.contentLength);
 
+        console.log('service 3');
         const file = ytdl(url, { format: highestAudio });
         file.pipe(res);
 
+        console.log('service 4');
         return res.status(200);
     }
   }

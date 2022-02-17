@@ -23,7 +23,7 @@ export class VideoController {
     @Query('url') url: string,
     @Query('type') type: 'video' | 'audio',
   ) {
-    // console.log(url," ",type)
+    console.log('controller');
     return this.videoService.newVideo(url, type, res, user);
   }
 }
