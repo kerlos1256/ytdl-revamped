@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Query, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  Req,
+  Res,
+  BadRequestException,
+} from '@nestjs/common';
 import { VideoService } from './video.service';
 
 import { Response } from 'express';
@@ -17,13 +26,22 @@ export class VideoController {
   }
 
   @Get('download')
-  download(
+  async download(
     @Res() res: Response,
     @GetTokenFromCookiesAndDecode() user: DeepPartial<User>,
     @Query('url') url: string,
     @Query('type') type: 'video' | 'audio',
   ) {
     console.log('controller');
-    return this.videoService.newVideo(url, type, res, user);
+    const { success, error } = await this.videoService.newVideo(
+      url,
+      type,
+      res,
+      user,
+    );
+    if (!success) {
+      throw new BadRequestException(error);
+    }
+    return res.status(200).send('donwloading');
   }
 }

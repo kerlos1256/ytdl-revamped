@@ -18,10 +18,17 @@ export class VideoService {
     type: 'video' | 'audio',
     res: Response,
     user: DeepPartial<User> | null,
-  ) {
+  ): Promise<{
+    success: boolean;
+    error?: string;
+  }> {
     console.log('service 1');
     const info = await ytdl.getInfo(url);
-    // if (!info) throw new BadRequestException('invalid url');
+    if (!info)
+      return {
+        success: false,
+        error: 'video with the given url was not found',
+      };
 
     console.log('service 2');
     switch (type) {
@@ -40,8 +47,9 @@ export class VideoService {
 
         console.log('service 3');
         ytdl(url, { format: videoFormat[0] }).pipe(res);
+        this.addVideo(user, info);
         console.log('service 4');
-        return res.status(200);
+        return { success: true };
       case 'audio':
         const audioFormats = info.formats.filter(
           (frm) => frm.hasAudio && !frm.hasVideo,
@@ -66,27 +74,27 @@ export class VideoService {
         console.log('service 3');
         const file = ytdl(url, { format: highestAudio });
         file.pipe(res);
-
+        this.addVideo(user, info);
         console.log('service 4');
-        return res.status(200);
+        return { success: true };
+      default:
+        return {
+          success: false,
+          error: 'type can only be either video or audio',
+        };
     }
   }
 
-  async addVideo(
-    user: DeepPartial<User>,
-    vidInfo: ytdl.videoInfo,
-    type: 'video' | 'audio',
-  ) {
+  async addVideo(user: DeepPartial<User>, vidInfo: ytdl.videoInfo) {
     if (!user) return;
-    // if (type !== 'audio' && type !== 'video') return;
-    // this.vidRepo.save(
-    //   this.vidRepo.create({
-    //     userId: user.id,
-    //     title: vidInfo.videoDetails.title,
-    //     url: vidInfo.videoDetails.video_url,
-    //     thumbnail: vidInfo.videoDetails.thumbnails[0].url,
-    //   }),
-    // );
+    this.vidRepo.save(
+      this.vidRepo.create({
+        userId: user.id,
+        title: vidInfo.videoDetails.title,
+        url: vidInfo.videoDetails.video_url,
+        thumbnail: vidInfo.videoDetails.thumbnails[0].url,
+      }),
+    );
   }
 
   async getInfo(url: string) {
