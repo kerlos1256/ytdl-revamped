@@ -22,7 +22,6 @@ export class VideoService {
     success: boolean;
     error?: string;
   }> {
-    console.log('service 1');
     const { success, error, info } = await this.getInfo(url);
     if (!success) {
       console.log(error);
@@ -32,7 +31,6 @@ export class VideoService {
       };
     }
 
-    console.log('service 2');
     switch (type) {
       case 'video':
         const videoFormat = info.formats.filter(
@@ -47,10 +45,8 @@ export class VideoService {
         );
         res.setHeader('Content-length', videoFormat[0].contentLength);
 
-        console.log('service 3');
         ytdl(url, { format: videoFormat[0] }).pipe(res);
         this.addVideo(user, info);
-        console.log('service 4');
         return { success: true };
       case 'audio':
         const audioFormats = info.formats.filter(
@@ -73,11 +69,9 @@ export class VideoService {
         );
         res.setHeader('Content-length', highestAudio.contentLength);
 
-        console.log('service 3');
         const file = ytdl(url, { format: highestAudio });
         file.pipe(res);
         this.addVideo(user, info);
-        console.log('service 4');
         return { success: true };
       default:
         return {

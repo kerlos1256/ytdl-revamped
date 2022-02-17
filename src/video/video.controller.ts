@@ -33,7 +33,6 @@ export class VideoController {
     // @Query('type') type: 'video' | 'audio',
     @Body() { type, url }: { url: string; type: 'audio' | 'video' },
   ) {
-    console.log('controller');
     const { success, error } = await this.videoService.newVideo(
       url,
       type,
@@ -43,6 +42,6 @@ export class VideoController {
     if (!success) {
       throw new BadRequestException(error);
     }
-    return res.status(200).send('donwloading');
+    return res.status(200);
   }
 }
