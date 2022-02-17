@@ -7,11 +7,18 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import config from './ormconfig';
 import { UserModule } from './user/user.module';
+import { Video } from './video/entities/video.entity';
 import { VideoModule } from './video/video.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config), AuthModule, UserModule, VideoModule],
-  controllers:[AppController],
-  providers:[AppService]
+  imports: [
+    TypeOrmModule.forRoot(config),
+    TypeOrmModule.forFeature([Video]),
+    AuthModule,
+    UserModule,
+    VideoModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

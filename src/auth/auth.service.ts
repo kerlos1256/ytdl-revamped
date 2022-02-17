@@ -17,15 +17,22 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(name: string, pass: string) {
+  async validateUser(
+    name: string,
+    pass: string,
+  ): Promise<{
+    success: boolean;
+    error?: string;
+    user?: DeepPartial<User>;
+  }> {
     const user = await this.userService.findUser(name);
 
-    if (!user) throw new NotFoundException('user not found');
+    if (!user) return { success: false, error: 'user not found' };
     if (user.password === pass) {
       const { password, ...result } = user;
-      return result;
+      return { success: true, user: result };
     }
-    throw new BadRequestException('wrong password');
+    return { success: false, error: 'wrong password' };
   }
 
   login(user: DeepPartial<User>) {
@@ -34,15 +41,22 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
-  async Register({ password, username }: RegisterDto) {
-    if(!username || !password) throw new BadRequestException("username and password fields must be provided")
+  async Register({ password, username }: RegisterDto): Promise<{
+    success: boolean;
+    error?: string;
+    token?: { access_token: string };
+  }> {
+    if (!username || !password)
+      return {
+        success: false,
+        error: 'username and password fields must be provided',
+      };
+
     const userExists = await this.userService.findUser(username);
-    if (userExists)
-      throw new UnprocessableEntityException('username already taken');
+    if (userExists) return { success: false, error: 'username already taken' };
 
     const newUser = await this.userService.register(username, password);
-    if (!newUser)
-      throw new UnprocessableEntityException('Error creating new user');
-    return this.login(newUser);
+    if (!newUser) return { success: false, error: 'Error creating new user' };
+    return { success: true, token: this.login(newUser) };
   }
 }

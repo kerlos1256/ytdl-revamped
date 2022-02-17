@@ -19,6 +19,9 @@ export class Video extends BaseEntity {
   url: string;
 
   @Column()
+  thumbnail: string;
+
+  @Column()
   userId: number;
 
   @ManyToOne(() => User, (user) => user.videos)

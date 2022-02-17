@@ -1,25 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>Register</title>
-</head>
-<body class="vh-100 d-flex align-items-center justify-content-center">
-    <style>
-        *{
-            padding:0px;
-            margin: 0px;
-            box-sizing: border-box;
-        }
-    </style>
-    <%- include("partials/nav.ejs") %>
-    <form action="/auth/register" method="post" 
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <title>Login</title>
+  </head>
+  <body class="vh-100 d-flex align-items-center justify-content-center">
+    <%- include("partials/nav.ejs")%>`
+    <form action="/auth/login" method="POST" 
     style="width: 30rem;"
     class="shadow-lg w-50rem p-3 bg-white d-flex justify-content-center align-items-center gap-3 flex-column">
-        <h2>Register</h2>
+        <h2>Login</h2>
         <div class="mb-3 w-100">
             <label for="username" class="form-label">Username</label>
             <input type="text" class="form-control w-100" id="username" placeholder="username">
@@ -28,7 +26,7 @@
             <label for="password" class="form-label">password</label>
             <input type="password" class="form-control w-100" id="password" placeholder="password"></input>
         </div>
-        <input type="submit" value="Register" class="btn btn-primary p-2" />
+        <input type="submit" value="Login" class="btn btn-primary p-2" />
     </form>
     <script>
         const form = document.querySelector('form');
@@ -38,7 +36,7 @@
             const username = document.getElementById('username').value
             const password = document.getElementById('password').value
             form.reset()
-            fetch('/auth/register',{
+            fetch('/auth/login',{
                 method:"POST",
                 mode:"cors",
                 credentials: "same-origin",
@@ -49,7 +47,9 @@
                     username,
                     password
                 })
-            }).then(res => res.json()).then((res)=> {
+            })
+            .then(res => res.json())
+            .then((res)=> {
               if(res.error){
                 alert(res.message)
               }else if(res.redirect){
@@ -58,8 +58,13 @@
                 alert('something went wrong, reload the page and try again')
               }
             })
+
         })
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-</body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>

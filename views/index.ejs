@@ -4,84 +4,152 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
     <title>Home</title>
   </head>
-  <body class="vh-100 vw-100">
+  <body class="vh-100">
     <style>
-        *{
-            padding:0px;
-            margin: 0px;
-            box-sizing: border-box;
-        }
+      * {
+        padding: 0px;
+        margin: 0px;
+        /* box-sizing: border-box; */
+      }
+      #cards-container {
+        justify-content: center;
+        grid-template-columns: repeat(
+          auto-fit,
+          minmax(min(100%/2, max(10px, 100%/5)), 250px)
+        );
+      }
     </style>
     <%- include("partials/nav.ejs") %>
 
     <div class="bg-primary w-100 h-25 container-fluid position-relative">
-      <div style="transform: translate(-50%,50%);" class="position-absolute bottom-0 start-50 w-75 d-flex bg-white border border-1 border-grey rounded-3 p-1">
+      <div
+        style="transform: translate(-50%, 50%)"
+        class="position-absolute bottom-0 start-50 w-75 d-flex bg-white border border-1 border-grey rounded-3 p-1"
+      >
         <div class="btn-group">
           <div id="type" type="video" class="btn btn-primary">Video</div>
-          <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-          </button>
+          <button
+            type="button"
+            class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          ></button>
           <ul class="dropdown-menu">
-            <li choice type="video" style="cursor: pointer;" class="dropdown-item">Video</li>
-            <li choice type="audio" style="cursor: pointer;" class="dropdown-item">Audio</li>
+            <li
+              choice="main"
+              type="video"
+              style="cursor: pointer"
+              class="dropdown-item"
+            >
+              Video
+            </li>
+            <li
+              choice="main"
+              type="audio"
+              style="cursor: pointer"
+              class="dropdown-item"
+            >
+              Audio
+            </li>
           </ul>
         </div>
-        <form id="urlForm" action="/video/download" method="get" class="w-100 d-flex">
-          <input name="url" id="url" type="url" placeholder="Video url" style="border: none;" class="form-control w-100">
-          <input type="hidden" value="video" name="type" id="typeInput">
+        <form
+          id="urlForm"
+          action="/video/download"
+          method="get"
+          class="w-100 d-flex"
+        >
+          <input
+            name="url"
+            id="url"
+            type="url"
+            placeholder="Video url"
+            style="border: none"
+            class="form-control w-100"
+          />
+          <input type="hidden" value="video" name="type" id="typeInput" />
         </form>
         <button id="paste" class="btn btn-sm btn-outline-info">Paste</button>
-        <button id="download" type="submit" class="btn btn-sm btn-success ms-1" disabled>Download</button>
+        <button
+          id="download"
+          type="submit"
+          class="btn btn-sm btn-success ms-1"
+          disabled
+        >
+          Download
+        </button>
       </div>
     </div>
 
+    <div
+      class="w-100 container d-flex flex-column justify-content-center align-items-center mt-5"
+    >
+      <% if(typeof videos !== 'undefined'){ %>
+      <div class="">
+        <h1>Recent Downloaded Videos</h1>
+      </div>
+      <div id="cards-container" class="w-100 d-grid gap-5">
+        <% videos.forEach((vid)=>{ %> <%- include("partials/videoCard.ejs",vid)
+        %> <% }) %>
+      </div>
+      <% } %>
+    </div>
+
     <script>
-      const urlInput = document.getElementById("url");
-      const paste = document.getElementById("paste");
+      const urlInput = document.getElementById('url');
+      const paste = document.getElementById('paste');
       const btn = document.getElementById('download');
-      const choices = document.querySelectorAll('[choice]')
-      const type = document.getElementById('type')
-      const typeInput = document.getElementById('typeInput')
-      const form = document.getElementById('urlForm')
+      const choices = document.querySelectorAll('[choice="main"]');
+      const type = document.getElementById('type');
+      const typeInput = document.getElementById('typeInput');
+      const form = document.getElementById('urlForm');
 
-      form.addEventListener("submit",(e)=>{
-        e.preventDefault()
-        console.log('submited')
-      })
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('submited');
+      });
 
-      choices.forEach((choice,index)=>{
-        choice.addEventListener('click',(e)=>{
-          type.innerText = choices[index].innerText
-          typeInput.value = choices[index].getAttribute('type')
-          type.setAttribute('type',choices[index].getAttribute('type'))
-        })
-      })
+      choices.forEach((choice, index) => {
+        choice.addEventListener('click', (e) => {
+          type.innerText = choices[index].innerText;
+          typeInput.value = choices[index].getAttribute('type');
+          type.setAttribute('type', choices[index].getAttribute('type'));
+        });
+      });
 
-      paste.addEventListener('click',async ()=>{
+      paste.addEventListener('click', async () => {
         urlInput.value = await navigator.clipboard.readText();
-        if(urlInput.value.length > 0) {
-          btn.removeAttribute('disabled')
-        }else{
-          btn.setAttribute('disabled','')
+        if (urlInput.value.length > 0) {
+          btn.removeAttribute('disabled');
+        } else {
+          btn.setAttribute('disabled', '');
         }
-      })
+      });
 
-      urlInput.addEventListener('keyup',(e)=>{
-        if(e.target.value.length > 0) {
-          btn.removeAttribute('disabled')
-        }else{
-          btn.setAttribute('disabled','')
+      urlInput.addEventListener('keyup', (e) => {
+        if (e.target.value.length > 0) {
+          btn.removeAttribute('disabled');
+        } else {
+          btn.setAttribute('disabled', '');
         }
-      })
+      });
 
-      btn.addEventListener("click",e=>{
-        console.log('clicked')
-        form.submit()
-      })
-
+      btn.addEventListener('click', (e) => {
+        form.submit();
+      });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

@@ -1,12 +1,12 @@
 require('dotenv').config();
-import { Strategy } from 'passport-jwt';
+import { Strategy, StrategyOptions } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 const cookieExtractor = (req) => {
   if (req && req.cookies) {
     const token = req.cookies['jwt'];
-    if (!token) throw new UnauthorizedException('token not supplied');
+    if (!token) return null;
     return token;
   }
 };

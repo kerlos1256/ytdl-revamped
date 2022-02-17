@@ -1,16 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DeepPartial, Repository } from 'typeorm';
+import { User } from './user/entities/user.entity';
+import { Video } from './video/entities/video.entity';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly JWTService: JwtService){}
+  constructor(
+    @InjectRepository(Video)
+    private readonly vidRepo: Repository<Video>,
+  ) {}
+  async Authed(user: DeepPartial<User>) {
+    if (user) {
+      const recentVids = await this.vidRepo.find({
+        where: { userId: user.id },
+        take: 8,
+        order: { id: 'DESC' },
+      });
 
- async Authed(req:Request){
-  const token = req.cookies['jwt'];
-  if(!token) return {authed:false,user:{}}
-  const verify = await this.JWTService.verify(token,{secret:process.env.JWTSecret})
-  if(!verify) return {authed:false,user:{}}
-  return {authed:true,user:{username:verify.username,id:verify.id}}
- }
+      return { authed: true, user, videos: recentVids };
+    } else {
+      return { authed: false };
+    }
+  }
+
+  async getHistory(user: DeepPartial<User>) {
+    const vids = await this.vidRepo.find({
+      where: { userId: user.id },
+      order: { id: 'DESC' },
+    });
+    return { vids, authed: true, user };
+  }
 }

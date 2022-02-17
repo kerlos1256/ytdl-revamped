@@ -1,0 +1,86 @@
+<div class="card" style="width: 18rem">
+  <img src="<%- thumbnail%>" class="card-img-top" alt="<%- title%>" />
+  <div class="card-body d-flex flex-column justify-content-between gap-2">
+    <h5 class="card-title"><%=title%></h5>
+    <div class="d-flex justify-content-between gap-3">
+      <div id="download-btn-<%-id%>" class="btn btn-primary w-100">
+        Download
+      </div>
+      <div class="btn-group">
+        <div id="type-<%-id%>" type="video" class="btn btn-primary">Video</div>
+        <button
+          type="button"
+          class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        ></button>
+        <ul class="dropdown-menu">
+          <li
+            choice="<%-id%>"
+            type="video"
+            style="cursor: pointer"
+            class="dropdown-item"
+          >
+            Video
+          </li>
+          <li
+            choice="<%-id%>"
+            type="audio"
+            style="cursor: pointer"
+            class="dropdown-item"
+          >
+            Audio
+          </li>
+        </ul>
+      </div>
+    </div>
+    <form
+      id="form-<%-id%>"
+      class="d-none"
+      action="/video/download"
+      method="get"
+    >
+      <input
+        id="url-<%-id%>"
+        class="d-none"
+        type="url"
+        name="url"
+        value="<%-url%>"
+      />
+      <input
+        id="type-input-<%-id%>"
+        value="video"
+        class="d-none"
+        type="text"
+        name="type"
+      />
+    </form>
+  </div>
+</div>
+
+<script>
+  document
+    .getElementById('download-btn-<%-id%>')
+    .addEventListener('click', async (e) => {
+      document.getElementById('type-input-<%-id%>').value = document
+        .getElementById('type-<%-id%>')
+        .getAttribute('type');
+      document.getElementById('form-<%-id%>').submit();
+    });
+
+  document.getElementById('form-<%-id%>').addEventListener('submit', (e) => {
+    e.preventDefault();
+  });
+
+  document.querySelectorAll('[choice="<%-id%>"]').forEach((choice, index) => {
+    choice.addEventListener('click', (e) => {
+      console.log(e.target.type);
+      document.getElementById('type-<%-id%>').innerText = e.target.innerText;
+
+      document.getElementById('type-input-<%-id%>').value = e.target.type;
+      document
+        .getElementById('type-<%-id%>')
+        .setAttribute('type', e.target.type);
+    });
+  });
+</script>
