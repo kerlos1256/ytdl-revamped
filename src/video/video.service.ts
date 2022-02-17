@@ -21,7 +21,7 @@ export class VideoService {
   ) {
     console.log('service 1');
     const info = await ytdl.getInfo(url);
-    if (!info) throw new BadRequestException('invalid url');
+    // if (!info) throw new BadRequestException('invalid url');
 
     console.log('service 2');
     switch (type) {
