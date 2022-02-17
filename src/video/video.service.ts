@@ -73,7 +73,7 @@ export class VideoService {
     vidInfo: ytdl.videoInfo,
     type: 'video' | 'audio',
   ) {
-    // if (!user) return;
+    if (!user) return;
     // if (type !== 'audio' && type !== 'video') return;
     // this.vidRepo.save(
     //   this.vidRepo.create({
