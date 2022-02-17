@@ -22,8 +22,6 @@ export class VideoService {
     const info = await ytdl.getInfo(url);
     if (!info) throw new BadRequestException('invalid url');
 
-    const newVid = this.addVideo(user, info, type);
-
     switch (type) {
       case 'video':
         const videoFormat = info.formats.filter(
