@@ -95,7 +95,9 @@ export class VideoService {
 
   async getInfo(url: string) {
     try {
+      console.log('try');
       const info = await ytdl.getInfo(url);
+      console.log('info', info.videoDetails.title);
       return { success: true, info };
     } catch (error) {
       return { success: false, error };
