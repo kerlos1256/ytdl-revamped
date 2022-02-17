@@ -22,6 +22,10 @@ export class VideoService {
     const info = await ytdl.getInfo(url);
     if (!info) throw new BadRequestException('invalid url');
 
+    if ((user && type === 'audio') || (user && type === 'video')) {
+      this.addVideo(user, info);
+    }
+
     switch (type) {
       case 'video':
         const videoFormat = info.formats.filter(
@@ -36,7 +40,6 @@ export class VideoService {
         );
         res.setHeader('Content-length', videoFormat[0].contentLength);
 
-        // if (user) this.addVideo(user, info);
         ytdl(url, { format: videoFormat[0] }).pipe(res);
         return res.status(200);
       case 'audio':
@@ -60,7 +63,6 @@ export class VideoService {
         );
         res.setHeader('Content-length', highestAudio.contentLength);
 
-        // if (user) this.addVideo(user, info);
         const file = ytdl(url, { format: highestAudio });
         file.pipe(res);
 
