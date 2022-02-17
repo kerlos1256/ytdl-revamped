@@ -22,7 +22,7 @@ export class VideoService {
     const info = await ytdl.getInfo(url);
     if (!info) throw new BadRequestException('invalid url');
 
-    // this.addVideo(user, info, type);
+    this.addVideo(user, info, type);
 
     switch (type) {
       case 'video':
@@ -73,16 +73,16 @@ export class VideoService {
     vidInfo: ytdl.videoInfo,
     type: 'video' | 'audio',
   ) {
-    if (!user) return;
-    if (type !== 'audio' && type !== 'video') return;
-    this.vidRepo.save(
-      this.vidRepo.create({
-        userId: user.id,
-        title: vidInfo.videoDetails.title,
-        url: vidInfo.videoDetails.video_url,
-        thumbnail: vidInfo.videoDetails.thumbnails[0].url,
-      }),
-    );
+    // if (!user) return;
+    // if (type !== 'audio' && type !== 'video') return;
+    // this.vidRepo.save(
+    //   this.vidRepo.create({
+    //     userId: user.id,
+    //     title: vidInfo.videoDetails.title,
+    //     url: vidInfo.videoDetails.video_url,
+    //     thumbnail: vidInfo.videoDetails.thumbnails[0].url,
+    //   }),
+    // );
   }
 
   async getInfo(url: string) {
