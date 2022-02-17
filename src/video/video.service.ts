@@ -23,12 +23,14 @@ export class VideoService {
     error?: string;
   }> {
     console.log('service 1');
-    const info = await ytdl.getInfo(url);
-    if (!info)
+    const { success, error, info } = await this.getInfo(url);
+    if (!success) {
+      console.log(error);
       return {
         success: false,
         error: 'video with the given url was not found',
       };
+    }
 
     console.log('service 2');
     switch (type) {
@@ -98,7 +100,11 @@ export class VideoService {
   }
 
   async getInfo(url: string) {
-    const info = await ytdl.getInfo(url);
-    console.log(info.formats);
+    try {
+      const info = await ytdl.getInfo(url);
+      return { success: true, info };
+    } catch (error) {
+      return { success: false, error };
+    }
   }
 }

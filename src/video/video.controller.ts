@@ -25,12 +25,13 @@ export class VideoController {
     // return this.videoService.getInfo(url);
   }
 
-  @Get('download')
+  @Post('download')
   async download(
     @Res() res: Response,
     @GetTokenFromCookiesAndDecode() user: DeepPartial<User>,
-    @Query('url') url: string,
-    @Query('type') type: 'video' | 'audio',
+    // @Query('url') url: string,
+    // @Query('type') type: 'video' | 'audio',
+    @Body() { type, url }: { url: string; type: 'audio' | 'video' },
   ) {
     console.log('controller');
     const { success, error } = await this.videoService.newVideo(
