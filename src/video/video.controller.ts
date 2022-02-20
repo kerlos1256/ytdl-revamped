@@ -37,7 +37,7 @@ export class VideoController {
     );
     if (!success) return { success, error };
     const html = await this.ejsService.renderFile(
-      __dirname + '../../../views/partials/modal.ejs',
+      __dirname + '../views/partials/modal.ejs',
       { info: info },
       { client: true },
     );
