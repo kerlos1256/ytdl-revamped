@@ -267,6 +267,7 @@ export class VideoService {
       };
     } catch (error) {
       console.log(error);
+      return { success: false, error };
     }
   }
 }
