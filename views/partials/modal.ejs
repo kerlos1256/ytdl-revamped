@@ -1,0 +1,235 @@
+<style>
+  #modal-content {
+    z-index: 101;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+</style>
+
+<div
+  class="modal fade w-full vh-100"
+  id="myModal"
+  tabindex="-1"
+  aria-labelledby="modalLabel"
+  aria-hidden="true"
+>
+  <button
+    style="display: none"
+    type="button"
+    id="showBtn"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#myModal"
+  ></button>
+  <form
+    class="d-none"
+    id="download-form"
+    action="/video/download"
+    method="post"
+  >
+    <input
+      class="d-none"
+      value="<%-info.url%>"
+      type="text"
+      name="url"
+      id="url-input"
+    />
+    <input class="d-none" type="text" name="itag" id="itag-input" />
+  </form>
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">choose format</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body d-flex flex-column gap-4">
+        <div
+          style="height: 5rem"
+          class="d-flex w-100 justify-content-start align-items-center gap-2"
+        >
+          <!-- video details -->
+          <!-- video thumbnail -->
+          <img
+            class="h-100"
+            src="<%- info.thumbnail%>"
+            alt="<%- info.title%>"
+          />
+
+          <div class="h-100 d-flex flex-column justify-content-between">
+            <div style="height: 2.5rem; overflow: hidden; font-size: 0.8rem">
+              <%- info.title%>
+            </div>
+            <!-- author info -->
+            <div style="height: 2rem" class="d-flex gap-1">
+              <img
+                src="<%- info.author.avatar%>"
+                alt="<%- info.author.name%>"
+              />
+              <div style="font-size: 0.8rem">
+                <div><%- info.author.name%></div>
+                <div><%- info.author.subscriber_count%></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-column gap-2">
+          <div class="d-flex flex-column gap-2">
+            <!-- video formats -->
+            <h4>Video</h4>
+            <div>
+              <% info.formats.video.forEach((form,index)=>{ %>
+              <div>
+                <div
+                  class="btn shadow-sm mb-1 d-flex justify-content-between align-items-center"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapse-<%-index%>"
+                  aria-expanded="false"
+                  aria-controls="collapse-<%-index%>"
+                >
+                  <%- form.qualityLabel%>
+                  <svg
+                    style="pointer-events: none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-arrows-expand"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8zM7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10z"
+                    />
+                  </svg>
+                </div>
+                <div class="collapse" id="collapse-<%-index%>">
+                  <div class="card card-body">
+                    <table>
+                      <tr>
+                        <th>Format</th>
+                        <th>Bitrate</th>
+                        <th>Size</th>
+                        <th>Download</th>
+                      </tr>
+                      <% form.qualitys.forEach((qulty,index)=>{ %>
+                      <tr>
+                        <td><%=qulty.container%></td>
+                        <td><%=qulty.bitrate%></td>
+                        <td><%=qulty.size%></td>
+                        <td>
+                          <button
+                            qulty="<%- qulty.itag%>"
+                            id="btn-<%- qulty.itag%>"
+                            class="btn px-2"
+                          >
+                            <svg
+                              style="pointer-events: none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              class="bi bi-cloud-arrow-down-fill"
+                              viewBox="0 0 16 16"
+                            >
+                              <path
+                                d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2zm2.354 6.854-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5a.5.5 0 0 1 1 0v3.793l1.146-1.147a.5.5 0 0 1 .708.708z"
+                              />
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                      <% }) %>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+          <div>
+            <h4>Audio</h4>
+            <!-- audio formats -->
+            <%info.formats.audio.forEach((form,index)=>{ %>
+            <div>
+              <div
+                class="btn shadow-sm mb-1 d-flex justify-content-between align-items-center"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapse-audio-<%-index%>"
+                aria-expanded="false"
+                aria-controls="collapse-audio-<%-index%>"
+              >
+                <%- form.qualityLabel || "audio"%>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-arrows-expand"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8zM7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10z"
+                  />
+                </svg>
+              </div>
+              <div class="collapse" id="collapse-audio-<%-index%>">
+                <div class="card card-body">
+                  <table>
+                    <tr>
+                      <th>Format</th>
+                      <th>Bitrate</th>
+                      <th>Size</th>
+                      <th>Download</th>
+                    </tr>
+                    <% form.qualitys.forEach((qulty,index)=>{ %>
+                    <tr>
+                      <td>oga</td>
+                      <td><%=qulty.bitrate%></td>
+                      <td><%=qulty.size%></td>
+                      <td>
+                        <button
+                          qulty="<%- qulty.itag%>"
+                          id="btn-<%- qulty.itag%>"
+                          class="btn px-2"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-cloud-arrow-down-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2zm2.354 6.854-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5a.5.5 0 0 1 1 0v3.793l1.146-1.147a.5.5 0 0 1 .708.708z"
+                            />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                    <% }) %>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -59,15 +59,11 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() body: RegisterDto, @Res() res: Response) {
-    const {
-      success,
-      error,
-      token: { access_token },
-    } = await this.authService.Register(body);
-    if (!success) {
-      throw new BadRequestException(error);
+    const { success, error, token } = await this.authService.Register(body);
+    if (!success || !token.access_token) {
+      throw new BadRequestException(error || 'something went wrong');
     }
-    res.cookie('jwt', access_token, {
+    res.cookie('jwt', token.access_token, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     });

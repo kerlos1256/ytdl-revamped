@@ -13,6 +13,7 @@
     <title>Home</title>
   </head>
   <body class="vh-100">
+    <div id="modal"></div>
     <style>
       * {
         padding: 0px;
@@ -36,40 +37,7 @@
         style="transform: translate(-50%, 50%)"
         class="position-absolute bottom-0 start-50 w-75 d-flex bg-white border border-1 border-grey rounded-3 p-1"
       >
-        <div class="btn-group">
-          <div id="type" type="video" class="btn btn-primary">Video</div>
-          <button
-            type="button"
-            class="btn btn-primary dropdown-toggle dropdown-toggle-split"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          ></button>
-          <ul class="dropdown-menu">
-            <li
-              choice="main"
-              type="video"
-              style="cursor: pointer"
-              class="dropdown-item"
-            >
-              Video
-            </li>
-            <li
-              choice="main"
-              type="audio"
-              style="cursor: pointer"
-              class="dropdown-item"
-            >
-              Audio
-            </li>
-          </ul>
-        </div>
-        <form
-          id="urlForm"
-          action="/video/download"
-          method="post"
-          class="w-100 d-flex"
-          autocomplete="off"
-        >
+        <div class="w-100 d-flex">
           <input
             name="url"
             id="url"
@@ -77,9 +45,9 @@
             placeholder="Video url"
             style="border: none"
             class="form-control w-100"
+            autocomplete="off"
           />
-          <input type="hidden" value="video" name="type" id="typeInput" />
-        </form>
+        </div>
         <button id="paste" class="btn btn-sm btn-outline-info">Paste</button>
         <button
           id="download"
@@ -110,23 +78,7 @@
       const urlInput = document.getElementById('url');
       const paste = document.getElementById('paste');
       const btn = document.getElementById('download');
-      const choices = document.querySelectorAll('[choice="main"]');
-      const type = document.getElementById('type');
-      const typeInput = document.getElementById('typeInput');
-      const form = document.getElementById('urlForm');
-
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        console.log('submited');
-      });
-
-      choices.forEach((choice, index) => {
-        choice.addEventListener('click', (e) => {
-          type.innerText = choices[index].innerText;
-          typeInput.value = choices[index].getAttribute('type');
-          type.setAttribute('type', choices[index].getAttribute('type'));
-        });
-      });
+      const modal = document.getElementById('modal');
 
       paste.addEventListener('click', async () => {
         urlInput.value = await navigator.clipboard.readText();
@@ -146,9 +98,34 @@
       });
 
       btn.addEventListener('click', (e) => {
-        form.submit();
+        fetch(`/video/info?url=${urlInput.value}`)
+          .then((res) => res.json())
+          .then(({ error, success, html }) => {
+            if (success) {
+              modal.innerHTML = html;
+            } else {
+              alert(error);
+            }
+          })
+          .then(() => document.getElementById('showBtn').click())
+          .then(() => {
+            const download_form = document.getElementById('download-form');
+            console.log('test');
+            download_form.addEventListener('submit', (e) => {
+              e.preventDefault();
+            });
+            document.querySelectorAll('[qulty]').forEach((qulty, index) => {
+              console.log(qulty);
+              qulty.addEventListener('click', async (e) => {
+                document.getElementById('itag-input').value =
+                  e.target.getAttribute('qulty');
+                download_form.submit();
+              });
+            });
+          });
       });
     </script>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

@@ -9,6 +9,7 @@ import config from './ormconfig';
 import { UserModule } from './user/user.module';
 import { Video } from './video/entities/video.entity';
 import { VideoModule } from './video/video.module';
+import { EjsModule } from './ejs/ejs.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { VideoModule } from './video/video.module';
     AuthModule,
     UserModule,
     VideoModule,
+    EjsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
